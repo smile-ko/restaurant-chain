@@ -1,0 +1,273 @@
+<style>
+  .card {
+    margin-top: 10px;
+    display: flex;
+    gap: 0 30px;
+  }
+  .card-item {
+    width: 25%;
+    padding: 20px 28px;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+  }
+  @media (min-width: 1600px) {
+    .card-item {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+  .card-item__icon > i {
+    font-size: 22px;
+    padding: 20px;
+    border-radius: 50%;
+    background-color: #fff;
+  }
+  .card-item__desc {
+    color: #fff;
+  }
+  .card-item__desc .desc__name {
+    font-weight: 500;
+    line-height: 24px;
+    margin: 4px 0px 8px;
+  }
+  .card-item__desc .desc__price {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 28.8px;
+  }
+  .card-item:nth-child(1) {
+    background-color: rgba(144, 181, 126, 0.9);
+  }
+  .card-item:nth-child(1) .card-item__icon > i {
+    color: rgba(144, 181, 126, 0.9);
+  }
+  .card-item:nth-child(2) {
+    background-color: rgba(56, 77, 40, 0.6);
+  }
+  .card-item:nth-child(2) .card-item__icon > i {
+    color: rgba(56, 77, 40, 0.6);
+  }
+  .card-item:nth-child(3) {
+    background-color: rgba(130, 158, 52, 0.6);
+  }
+  .card-item:nth-child(3) .card-item__icon > i {
+    color: rgba(130, 158, 52, 0.6);
+  }
+  .card-item:nth-child(4) {
+    background-color: rgba(70, 110, 80, 0.6);
+  }
+  .card-item:nth-child(4) .card-item__icon > i {
+    color: rgba(70, 110, 80, 0.6);
+  }
+</style>
+
+<div class="card">
+  <div class="card-item">
+    <div class="card-item__icon">
+      <i class="fa-solid fa-money-bills"></i>
+    </div>
+    <div class="card-item__desc">
+      <p class="desc__name">Doanh thu</p>
+      <p class="desc__price" id="order">
+        <%= totalRevenue.toLocaleString('vi-VN') %>đ
+      </p>
+    </div>
+  </div>
+  <div class="card-item">
+    <div class="card-item__icon">
+      <i class="fa fa-users"></i>
+    </div>
+    <div class="card-item__desc">
+      <p class="desc__name">Bàn chờ xác nhận</p>
+      <p class="desc__price" id="customer"><%= books.length %></p>
+    </div>
+  </div>
+  <div class="card-item">
+    <div class="card-item__icon">
+      <i class="fa fa-utensils"></i>
+    </div>
+    <div class="card-item__desc">
+      <p class="desc__name">Bàn ăn</p>
+      <p class="desc__price" id="product"><%= tables.length %></p>
+    </div>
+  </div>
+  <div class="card-item">
+    <div class="card-item__icon">
+      <i class="fa-solid fa-clipboard-user"></i>
+    </div>
+    <div class="card-item__desc">
+      <p class="desc__name">Nhân viên</p>
+      <p class="desc__price" id="blog"><%= staffs.length %></p>
+    </div>
+  </div>
+</div>
+
+<!-- Biểu đồ món ăn bán chạy nhất -->
+<h1 class="mt-4">Món ăn bán chạy nhất</h1>
+<canvas id="myChart-1" width="100%" height="20vh"></canvas>
+
+<!-- Biểu đồ thống kê doanh thu -->
+<div class="mt-4" style="display: flex; align-items: center; gap: 10px">
+  <h1>Thống kê hoanh thu</h1>
+  <div class="form_group">
+    <div class="form_field">
+      <input
+        placeholder="Ngày bắt đầu"
+        name="startDay"
+        id="startDay"
+        class="form_input"
+        type="date"
+        style="padding: 8px 20px; border-radius: 6px; font-size: 12px"
+      />
+      <label for="startDay" class="form_label" style="font-size: 12px">
+        Từ</label
+      >
+    </div>
+  </div>
+  <div class="form_group" style="margin-top: 0">
+    <div class="form_field">
+      <input
+        type="date"
+        placeholder="Ngày kết thúc"
+        name="endDay"
+        id="endDay"
+        class="form_input"
+        style="padding: 8px 20px; border-radius: 6px; font-size: 12px"
+      />
+      <label for="endDay" class="form_label" style="font-size: 12px">Đến</label>
+    </div>
+  </div>
+  <button
+    class="modal-open btn btn_primary table_add"
+    style="padding: 9px 20px"
+    id="filter"
+  >
+    <i class="fa-solid fa-filter"></i>
+  </button>
+  <button
+    class="modal-open btn btn_secondary table_add"
+    style="padding: 10px 20px"
+    id="clear-filter"
+  >
+    <i class="fa-solid fa-filter-circle-xmark"></i>
+  </button>
+</div>
+<canvas id="myChart" width="100%" height="20vh"></canvas>
+
+<script src="/admins/js/toast.js"></script>
+<script src="/admins/js/validator.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  let chart; // Biến toàn cục để lưu trữ biểu đồ
+
+  const initPrice = (startDay = "", endDay = "") => {
+    $.ajax({
+      url: `/admin/order/average-revenue?startDay=${startDay}&endDay=${endDay}`,
+      method: "GET",
+      success: (response) => {
+        const labels = response.data.map((item) => item.date);
+        const revenueData = response.data.map((item) => item.averageRevenue);
+        const maxRevenue = Math.max(...revenueData) + 200000;
+
+        // Hủy biểu đồ cũ nếu tồn tại
+        if (chart) {
+          chart.destroy();
+        }
+
+        // Tạo biểu đồ mới
+        const ctx = document.getElementById("myChart").getContext("2d");
+        chart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              {
+                label: "Doanh thu",
+                data: revenueData,
+                borderColor: "rgba(89, 120, 62, 0.6)",
+                backgroundColor: "rgba(89, 120, 62, 0.2)",
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+                max: maxRevenue,
+              },
+            },
+          },
+        });
+      },
+      error: () => {
+        toast({
+          title: "Thất bại",
+          message: `Không tải được dữ liệu`,
+          type: "error",
+          duration: 3000,
+        });
+      },
+    });
+  };
+
+  initPrice();
+
+  $("#filter").click(() => {
+    const startDay = $("#startDay").val();
+    const endDay = $("#endDay").val();
+    initPrice(startDay, endDay);
+  });
+
+  $("#clear-filter").click(() => {
+    $("#startDay").val(null);
+    $("#endDay").val(null);
+    initPrice("", "");
+  });
+
+  $.ajax({
+    url: "/admin/foods/getBestSellingProductsByStore",
+    method: "GET",
+    success: (response) => {
+      const labels = response.data.map((item) => item.product);
+      const revenueData = response.data.map((item) => item.totalSold);
+
+      const maxRevenue = Math.max(...revenueData) + 50;
+
+      const ctx = document.getElementById("myChart-1").getContext("2d");
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Số lượng bán",
+              data: revenueData,
+              borderColor: "rgba(89, 120, 62, 0.6)",
+              backgroundColor: "rgba(89, 120, 62, 0.2)",
+              fill: true,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: maxRevenue,
+            },
+          },
+        },
+      });
+    },
+    error: () => {
+      toast({
+        title: "Thất bại",
+        message: `Không tải được dữ liệu`,
+        type: "error",
+        duration: 3000,
+      });
+    },
+  });
+</script>
