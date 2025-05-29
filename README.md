@@ -1,20 +1,24 @@
-## Giới thiệu
+## Introduction
 
-Dự án **Restaurant Chain** là một hệ thống quản lý chuỗi nhà hàng. Hướng dẫn này sẽ giúp bạn cài đặt và chạy dự án trên máy của mình.
+The Restaurant Chain project is a restaurant chain management system. This guide will help you set up and run the project on your local machine.
 
-## Yêu cầu hệ thống
+## System Requirements
 
--   **Node.js** phiên bản 14.x hoặc cao hơn.
--   **MySQL** phiên bản 5.7 hoặc cao hơn.
--   **Git** để quản lý mã nguồn.
+- **Node** v18.x
+- **MySQL** v5.7
+- **Git**
+- **Docker**
 
-## Bước 1: Clone repository
-
-Để bắt đầu, bạn cần clone mã nguồn từ GitHub:
+## Installation Steps
 
 ```bash
-git clone https://github.com/vdtien2908/restaurant-chain-21082024.git
-cd restaurant-chain-21082024
+git clone https://github.com/smile-ko/restaurant-chain.git
+
+cd restaurant-chain
+
+npm install
+
+docker-compose up -d
 
 cp .env-example .env
 
