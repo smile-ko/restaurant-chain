@@ -1,5 +1,5 @@
 {
-  "name": "restaurant-chain-21082024",
+  "name": "restaurant-chain",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vdtien2908/restaurant-chain-21082024.git"
+    "url": "git+https://github.com/smile-ko/restaurant-chain.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/vdtien2908/restaurant-chain-21082024/issues"
+    "url": "https://github.com/smile-ko/restaurant-chain/issues"
   },
-  "homepage": "https://github.com/vdtien2908/restaurant-chain-21082024#readme",
+  "homepage": "https://github.com/smile-ko/restaurant-chain#readme",
   "dependencies": {
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
