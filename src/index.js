@@ -33,7 +33,7 @@ app.use(
     limits: {
       fileSize: 5 * 1024 * 1024, // 5MB limit
     },
-  })
+  }),
 );
 
 // Logger request
@@ -42,50 +42,6 @@ app.use(morgan("dev"));
 // Body parser
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Fake data login
-// app.use((req, res, next) => {
-//   const user = {
-//     id: 1,
-//     fullName: "Quản trị viên",
-//     email: "quantrivien@food.com",
-//     gender: true,
-//     dob: "2002-08-29T07:58:58.000Z",
-//     pointMemberId: null,
-//     roleId: 1,
-//     status: false,
-//   };
-
-//   const customer = {
-//     id: 19,
-//     fullName: "Vũ Đức Tiến",
-//     email: "vuductien2908@gmail.com",
-//     gender: true,
-//     dob: "2002-08-29T07:58:58.000Z",
-//     pointMemberId: null,
-//     roleId: 4,
-//     status: false,
-//   };
-
-//   const store = {
-//     id: 1,
-//     storeName: "Cửa hàng 1",
-//     address: "Địa chỉ 1",
-//     phoneNumber: "0123456789",
-//     default: true,
-//     active: true,
-//     managedBy: 2,
-//     status: false,
-//   };
-
-//   req.session.user = user;
-//   req.session.store = store;
-//   req.session.customer = customer;
-//   res.locals.user = user;
-//   res.locals.store = store;
-//   res.locals.customer = customer;
-//   next();
-// });
 
 // Init route
 route(app);
