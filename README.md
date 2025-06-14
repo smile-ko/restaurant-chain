@@ -110,14 +110,38 @@ npm start
 ```
 restaurant-chain/
 ├── src/
-   ├── app/            # Application core modules
-   ├── configs/        # Configuration files
-   ├── database/       # Database models and migrations
-   ├── public/         # Static files (CSS, JS, images)
-   ├── resources/      # Resource files
-   ├── routes/         # Route definitions
-   ├── utils/          # Utility functions
-   └── index.js        # Application entry point
+│   ├── app/
+│   │   ├── http/
+│   │   │   ├── controllers/
+│   │   │   └── middlewares/
+│   │   └── models/
+│   │
+│   ├── configs/
+│   │   ├── db/
+│   │   └── index.js
+│   │
+│   ├── database/
+│   │   ├── migrations/
+│   │   └── seeders/
+│   │
+│   ├── public/
+│   │   ├── admins/
+│   │   ├── customers/
+│   │   └── storages_image/
+│   │
+│   ├── resources/
+│   │   ├── views/
+│   │   └── scss/
+│   │
+│   └── routes/
+│       ├── admins/
+│       ├── customers/
+│       └── index.js
+│
+└── utils/
+    ├── getCurrentDate.js
+    ├── sendEmail.js
+    └── sendZns.js
 ```
 
 ## Available Scripts
